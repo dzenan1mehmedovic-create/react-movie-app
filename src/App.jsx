@@ -36,11 +36,10 @@ const App = () => {
       }
 
       const data = await response.json();
-
       setMovieList(data.results || []);
     } catch (error) {
-      setErrorMessage("Error fetching movies. Please try again later.");
       console.error(error);
+      setErrorMessage("Error fetching movies. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -52,21 +51,35 @@ const App = () => {
 
   return (
     <main>
-      <h1>Movie App</h1>
+      <div className="pattern" />
 
-      <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <div className="wrapper">
+        <header>
+          <h1>
+            Find <span>Movies</span> You'll Love
+            <br />
+            Without the Hassle
+          </h1>
 
-      {isLoading ? (
-        <Spinner />
-      ) : errorMessage ? (
-        <p>{errorMessage}</p>
-      ) : (
-        <div className="movies">
-          {movieList.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
-        </div>
-      )}
+          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        </header>
+
+        <section className="all-movies">
+          <h2>All Movies</h2>
+
+          {isLoading ? (
+            <Spinner />
+          ) : errorMessage ? (
+            <p className="error-message">{errorMessage}</p>
+          ) : (
+            <ul>
+              {movieList.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
     </main>
   );
 };

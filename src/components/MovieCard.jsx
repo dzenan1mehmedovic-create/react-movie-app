@@ -13,7 +13,7 @@ const MovieCard = ({ movie }) => {
         src={
           poster_path
             ? `https://image.tmdb.org/t/p/w500${poster_path}`
-            : "https://placehold.co/500x750?text=No+Image"
+            : "https://placehold.co/600x900/1a1a1a/ffffff?text=No+Image"
         }
         alt={title}
       />
@@ -27,7 +27,7 @@ const MovieCard = ({ movie }) => {
           </div>
 
           <span>•</span>
-          <p className="lang">{original_language}</p>
+          <p className="lang">{original_language || "N/A"}</p>
 
           <span>•</span>
           <p className="year">
