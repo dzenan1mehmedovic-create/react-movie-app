@@ -1,9 +1,21 @@
 import { useState } from "react";
+import Search from "./components/Search";
+import MovieCard from "./components/MovieCard";
 
-function App() {
+const App = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
-    <h1>React Movie App</h1>
+    <main>
+      <h1>Movie App</h1>
+
+      <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+      <div className="movies">
+        <MovieCard movie={{ title: "Test Movie", poster_path: "" }} />
+      </div>
+    </main>
   );
-}
+};
 
 export default App;
