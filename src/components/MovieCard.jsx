@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { isFavoriteMovie, toggleFavoriteMovie } from "../utils/favorites";
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, onFavoritesChange }) => {
   const {
     id,
     title,
@@ -10,10 +12,37 @@ const MovieCard = ({ movie }) => {
     release_date,
   } = movie;
 
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    setIsFavorite(isFavoriteMovie(id));
+  }, [id]);
+
+  const handleFavoriteClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const updatedFavorites = toggleFavoriteMovie(movie);
+    const existsNow = updatedFavorites.some((fav) => fav.id === id);
+
+    setIsFavorite(existsNow);
+
+    if (onFavoritesChange) {
+      onFavoritesChange(updatedFavorites);
+    }
+  };
+
   return (
     <li>
       <Link to={`/movie/${id}`} className="movie-card-link">
         <div className="movie-card">
+          <button
+            className={`favorite-btn ${isFavorite ? "active" : ""}`}
+            onClick={handleFavoriteClick}
+          >
+            {isFavorite ? "♥" : "♡"}
+          </button>
+
           <img
             src={
               poster_path

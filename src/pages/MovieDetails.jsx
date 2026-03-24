@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
+import { isFavoriteMovie, toggleFavoriteMovie } from "../utils/favorites";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -19,6 +20,7 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -37,6 +39,7 @@ const MovieDetails = () => {
 
         const data = await response.json();
         setMovie(data);
+        setIsFavorite(isFavoriteMovie(data.id));
       } catch (error) {
         console.error(error);
         setErrorMessage("Error fetching movie details.");
@@ -47,6 +50,14 @@ const MovieDetails = () => {
 
     fetchMovieDetails();
   }, [id]);
+
+  const handleFavoriteClick = () => {
+    if (!movie) return;
+
+    const updatedFavorites = toggleFavoriteMovie(movie);
+    const existsNow = updatedFavorites.some((fav) => fav.id === movie.id);
+    setIsFavorite(existsNow);
+  };
 
   if (isLoading) {
     return (
@@ -97,7 +108,16 @@ const MovieDetails = () => {
           </div>
 
           <div className="movie-details-content">
-            <h1>{movie.title}</h1>
+            <div className="details-title-row">
+              <h1>{movie.title}</h1>
+
+              <button
+                className={`favorite-details-btn ${isFavorite ? "active" : ""}`}
+                onClick={handleFavoriteClick}
+              >
+                {isFavorite ? "♥ Favorited" : "♡ Add to Favorites"}
+              </button>
+            </div>
 
             <div className="movie-meta">
               <span>⭐ {movie.vote_average?.toFixed(1) || "N/A"}</span>
@@ -107,11 +127,14 @@ const MovieDetails = () => {
               <span>{movie.runtime ? `${movie.runtime} min` : "N/A"}</span>
             </div>
 
-            <p className="movie-overview">{movie.overview || "No overview available."}</p>
+            <p className="movie-overview">
+              {movie.overview || "No overview available."}
+            </p>
 
             <div className="movie-extra">
               <p>
-                <strong>Language:</strong> {movie.original_language?.toUpperCase() || "N/A"}
+                <strong>Language:</strong>{" "}
+                {movie.original_language?.toUpperCase() || "N/A"}
               </p>
               <p>
                 <strong>Status:</strong> {movie.status || "N/A"}

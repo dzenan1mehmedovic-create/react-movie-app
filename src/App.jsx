@@ -6,6 +6,7 @@ import MovieCard from "./components/MovieCard";
 import Spinner from "./components/Spinner";
 import MovieDetails from "./pages/MovieDetails";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
+import { getFavorites } from "./utils/favorites";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -23,6 +24,7 @@ const HomePage = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [movieList, setMovieList] = useState([]);
   const [trendingMovies, setTrendingMovies] = useState([]);
+  const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -74,6 +76,7 @@ const HomePage = () => {
 
   useEffect(() => {
     loadTrendingMovies();
+    setFavoriteMovies(getFavorites());
   }, []);
 
   return (
@@ -90,6 +93,22 @@ const HomePage = () => {
 
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
+
+        {favoriteMovies.length > 0 && (
+          <section className="favorites-section">
+            <h2>Favorite Movies</h2>
+
+            <ul>
+              {favoriteMovies.map((movie) => (
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  onFavoritesChange={setFavoriteMovies}
+                />
+              ))}
+            </ul>
+          </section>
+        )}
 
         {trendingMovies.length > 0 && (
           <section className="trending">
@@ -116,7 +135,11 @@ const HomePage = () => {
           ) : (
             <ul>
               {movieList.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  onFavoritesChange={setFavoriteMovies}
+                />
               ))}
             </ul>
           )}
