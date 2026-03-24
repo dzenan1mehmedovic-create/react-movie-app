@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import { useDebounce } from "react-use";
 import Search from "./components/Search";
 import MovieCard from "./components/MovieCard";
 import Spinner from "./components/Spinner";
 import MovieDetails from "./pages/MovieDetails";
+import Auth from "./pages/Auth";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
 import { getFavorites } from "./utils/favorites";
+import { getCurrentUser, logoutUser } from "./appwriteAuth";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -25,6 +27,7 @@ const HomePage = () => {
   const [movieList, setMovieList] = useState([]);
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [favoriteMovies, setFavoriteMovies] = useState([]);
+  const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -77,6 +80,13 @@ const HomePage = () => {
   useEffect(() => {
     loadTrendingMovies();
     setFavoriteMovies(getFavorites());
+
+    const fetchUser = async () => {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+    };
+
+    fetchUser();
   }, []);
 
   return (
@@ -92,6 +102,19 @@ const HomePage = () => {
           </h1>
 
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+          <div className="auth-bar">
+            {user ? (
+              <>
+                <p>Welcome, {user.name}</p>
+                <button onClick={logoutUser}>Logout</button>
+              </>
+            ) : (
+              <Link to="/auth" className="auth-link">
+                Login
+              </Link>
+            )}
+          </div>
         </header>
 
         {favoriteMovies.length > 0 && (
@@ -154,6 +177,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/movie/:id" element={<MovieDetails />} />
+      <Route path="/auth" element={<Auth />} />
     </Routes>
   );
 };
