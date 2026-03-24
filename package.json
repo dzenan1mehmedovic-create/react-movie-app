@@ -13,6 +13,7 @@
     "appwrite": "^23.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.2",
     "react-use": "^17.6.0"
   },
   "devDependencies": {

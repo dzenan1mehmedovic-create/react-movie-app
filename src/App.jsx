@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import { useDebounce } from "react-use";
 import Search from "./components/Search";
 import MovieCard from "./components/MovieCard";
 import Spinner from "./components/Spinner";
+import MovieDetails from "./pages/MovieDetails";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
@@ -16,7 +18,7 @@ const API_OPTIONS = {
   },
 };
 
-const App = () => {
+const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [movieList, setMovieList] = useState([]);
@@ -121,6 +123,15 @@ const App = () => {
         </section>
       </div>
     </main>
+  );
+};
+
+const App = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/movie/:id" element={<MovieDetails />} />
+    </Routes>
   );
 };
 
