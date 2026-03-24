@@ -153,8 +153,13 @@ const HomePage = () => {
       <div className="wrapper">
         <header>
           <div className="top-bar">
-            <Link to="/" className="logo-link">
-              MovieApp
+            <Link
+              to="/"
+              className="logo-link"
+              onClick={() => window.location.reload()}
+            >
+              <img src="/icon.webp" alt="logo" />
+              <span>MovieApp</span>
             </Link>
 
             <div className="auth-bar">
