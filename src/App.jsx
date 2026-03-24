@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { useDebounce } from "react-use";
 import Search from "./components/Search";
@@ -21,6 +21,30 @@ const API_OPTIONS = {
   },
 };
 
+const genreMap = {
+  28: "Action",
+  12: "Adventure",
+  16: "Animation",
+  35: "Comedy",
+  80: "Crime",
+  99: "Documentary",
+  18: "Drama",
+  10751: "Family",
+  14: "Fantasy",
+  36: "History",
+  27: "Horror",
+  10402: "Music",
+  9648: "Mystery",
+  10749: "Romance",
+  878: "Sci-Fi",
+  10770: "TV Movie",
+  53: "Thriller",
+  10752: "War",
+  37: "Western",
+};
+
+const genreList = ["All", ...Object.values(genreMap)];
+
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -30,6 +54,9 @@ const HomePage = () => {
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const [selectedGenre, setSelectedGenre] = useState("All");
+  const [sortBy, setSortBy] = useState("default");
 
   useDebounce(
     () => {
@@ -92,7 +119,32 @@ const HomePage = () => {
   const handleLogout = async () => {
     await logoutUser();
     setUser(null);
+    window.location.reload();
   };
+
+  const filteredAndSortedMovies = useMemo(() => {
+    let updatedMovies = [...movieList];
+
+    if (selectedGenre !== "All") {
+      updatedMovies = updatedMovies.filter((movie) =>
+        movie.genre_ids?.some((id) => genreMap[id] === selectedGenre)
+      );
+    }
+
+    if (sortBy === "name") {
+      updatedMovies.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortBy === "year") {
+      updatedMovies.sort((a, b) => {
+        const yearA = a.release_date ? parseInt(a.release_date.split("-")[0]) : 0;
+        const yearB = b.release_date ? parseInt(b.release_date.split("-")[0]) : 0;
+        return yearB - yearA;
+      });
+    } else if (sortBy === "rating") {
+      updatedMovies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+    }
+
+    return updatedMovies;
+  }, [movieList, selectedGenre, sortBy]);
 
   return (
     <main>
@@ -126,6 +178,30 @@ const HomePage = () => {
           </h1>
 
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+          <div className="filters-row">
+            <div className="genre-filter">
+              <select
+                value={selectedGenre}
+                onChange={(e) => setSelectedGenre(e.target.value)}
+              >
+                {genreList.map((genre) => (
+                  <option key={genre} value={genre}>
+                    {genre}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="sort-filter">
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                <option value="default">Sort by</option>
+                <option value="name">Name</option>
+                <option value="year">Year</option>
+                <option value="rating">Rating</option>
+              </select>
+            </div>
+          </div>
         </header>
 
         {favoriteMovies.length > 0 && (
@@ -168,7 +244,7 @@ const HomePage = () => {
             <p className="error-message">{errorMessage}</p>
           ) : (
             <ul>
-              {movieList.map((movie) => (
+              {filteredAndSortedMovies.map((movie) => (
                 <MovieCard
                   key={movie.id}
                   movie={movie}
