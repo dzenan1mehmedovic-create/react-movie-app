@@ -68,6 +68,61 @@ header {
   align-items: center;
   gap: 1.75rem;
   padding-top: 2rem;
+  width: 100%;
+}
+
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.logo-link {
+  text-decoration: none;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+  transition: opacity 0.2s ease;
+}
+
+.logo-link:hover {
+  opacity: 0.85;
+}
+
+.auth-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.auth-bar p {
+  margin: 0;
+  color: var(--color-light-100);
+  font-weight: 600;
+}
+
+.auth-bar button,
+.auth-link {
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-bar button:hover,
+.auth-link:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+  box-shadow: 0 10px 24px rgba(171, 139, 255, 0.22);
 }
 
 header h1 {
@@ -107,28 +162,6 @@ header h1 span {
 .search input:focus {
   border-color: rgba(171, 139, 255, 0.55);
   box-shadow: 0 0 0 4px rgba(171, 139, 255, 0.12);
-}
-
-.auth-bar {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.auth-bar p {
-  color: var(--color-light-100);
-  font-weight: 600;
-}
-
-.auth-bar button,
-.auth-link {
-  border: none;
-  background: var(--color-primary);
-  color: white;
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
 }
 
 .favorites-section,
@@ -386,6 +419,27 @@ header h1 span {
   padding: 2rem;
 }
 
+.auth-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  gap: 12px;
+}
+
+.back-home,
+.auth-logo {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.back-home:hover,
+.auth-logo:hover {
+  opacity: 0.8;
+}
+
 .auth-card h1 {
   margin-bottom: 1.5rem;
   font-size: 2rem;
@@ -416,6 +470,13 @@ header h1 span {
   color: white;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-form button:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+  box-shadow: 0 10px 24px rgba(171, 139, 255, 0.22);
 }
 
 .switch-auth {
@@ -454,6 +515,19 @@ header h1 span {
     padding-top: 1rem;
   }
 
+  .top-bar {
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .logo-link {
+    font-size: 1.45rem;
+  }
+
+  .auth-bar {
+    gap: 0.7rem;
+  }
+
   .favorites-section,
   .trending,
   .all-movies {
@@ -482,5 +556,40 @@ header h1 span {
   .trending-item img {
     width: 100px;
     height: 140px;
+  }
+
+  .auth-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+
+  .auth-bar {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .auth-bar p {
+    font-size: 0.95rem;
+  }
+
+  .auth-bar button,
+  .auth-link {
+    padding: 0.72rem 0.9rem;
+  }
+
+  header h1 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .search input {
+    font-size: 0.95rem;
   }
 }

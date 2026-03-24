@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser, registerUser } from "../appwriteAuth";
 
 const Auth = () => {
@@ -34,6 +34,16 @@ const Auth = () => {
 
       <div className="wrapper auth-page">
         <div className="auth-card">
+          <div className="auth-top">
+            <Link to="/" className="back-home">
+              ← Back to Home
+            </Link>
+
+            <Link to="/" className="auth-logo">
+              MovieApp
+            </Link>
+          </div>
+
           <h1>{isLogin ? "Login" : "Register"}</h1>
 
           <form onSubmit={handleSubmit} className="auth-form">
@@ -68,7 +78,10 @@ const Auth = () => {
             </button>
           </form>
 
-          <p className="switch-auth" onClick={() => setIsLogin(!isLogin)}>
+          <p
+            className="switch-auth"
+            onClick={() => setIsLogin(!isLogin)}
+          >
             {isLogin
               ? "Don't have an account? Register"
               : "Already have an account? Login"}

@@ -89,12 +89,36 @@ const HomePage = () => {
     fetchUser();
   }, []);
 
+  const handleLogout = async () => {
+    await logoutUser();
+    setUser(null);
+  };
+
   return (
     <main>
       <div className="pattern" />
 
       <div className="wrapper">
         <header>
+          <div className="top-bar">
+            <Link to="/" className="logo-link">
+              MovieApp
+            </Link>
+
+            <div className="auth-bar">
+              {user ? (
+                <>
+                  <p>Welcome, {user.name}</p>
+                  <button onClick={handleLogout}>Logout</button>
+                </>
+              ) : (
+                <Link to="/auth" className="auth-link">
+                  Login / Register
+                </Link>
+              )}
+            </div>
+          </div>
+
           <h1>
             Find <span>Movies</span> You'll Love
             <br />
@@ -102,19 +126,6 @@ const HomePage = () => {
           </h1>
 
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-
-          <div className="auth-bar">
-            {user ? (
-              <>
-                <p>Welcome, {user.name}</p>
-                <button onClick={logoutUser}>Logout</button>
-              </>
-            ) : (
-              <Link to="/auth" className="auth-link">
-                Login
-              </Link>
-            )}
-          </div>
         </header>
 
         {favoriteMovies.length > 0 && (
