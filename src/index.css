@@ -227,4 +227,20 @@ header h1 span {
     min-height: auto;
     font-size: 1rem;
   }
+  .trending-item {
+  position: relative;
+}
+
+.trending-item p {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+  z-index: 10;
+  text-shadow: 0 0 10px rgba(0,0,0,0.7);
+}
+
+  
 }
